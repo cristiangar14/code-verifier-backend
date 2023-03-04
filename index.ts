@@ -14,9 +14,20 @@ app.get('/', (req:Request, res:Response) => {
     res.send('API Rest full Express + TS + Swagger + Mongoose + nodemon')
 });
 
-app.get('/hello', (req:Request, res:Response) => {
+app.get('/hello/:name?', (req:Request, res:Response) => {
+    const name = req.params.name || 'anonimo';
+    const data = {
+        message: `Hola, ${name}`
+    }
+    res.status(200).json({data})
+});
+
+app.get('/bye', (req:Request, res:Response) => {
     //Send Hello Worls
-    res.send('Hello world')
+    const data = {
+        message: 'Goodbye, World'
+    }
+    res.status(200).json({data})
 });
 
 //Execute APP and Lisnten requests to PORT

@@ -15,9 +15,19 @@ app.get('/', (req, res) => {
     //Send Hello Worls
     res.send('API Rest full Express + TS + Swagger + Mongoose + nodemon');
 });
-app.get('/hello', (req, res) => {
+app.get('/hello/:name?', (req, res) => {
+    const name = req.params.name || 'anonimo';
+    const data = {
+        message: `Hola, ${name}`
+    };
+    res.status(200).json({ data });
+});
+app.get('/bye', (req, res) => {
     //Send Hello Worls
-    res.send('Hello world');
+    const data = {
+        message: 'Goodbye, World'
+    };
+    res.status(200).json({ data });
 });
 //Execute APP and Lisnten requests to PORT
 app.listen(port, () => console.log(`EXPRESS SERVER: Running at http://localhost:${port}`));

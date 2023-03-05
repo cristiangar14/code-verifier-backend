@@ -1,9 +1,18 @@
+import { Get, Query, Route, Tags } from "tsoa";
 import { GoodbyeResponse } from "./types";
 import { IGoodbyeController } from "./interfaces";
 import { LogSuccess } from "../utils/logger";
 
+@Route("/api/goodbye")
+@Tags("GoodbyeController")
 export class GoodbyeController implements IGoodbyeController {
-    public async getMessage(name?: string | undefined): Promise<GoodbyeResponse> {
+    /**
+     * Endpoint to retreive a Message "Hello {name}" in JSON
+     * @param { string | undefined } name Name of user to be  greeated
+     * @returns { GoodbyeResponse } Promise of BasicResponse
+     */
+    @Get("/")
+    public async getMessage(@Query()name?: string): Promise<GoodbyeResponse> {
         LogSuccess('[api/goodbye] Get Request')
 
         return {

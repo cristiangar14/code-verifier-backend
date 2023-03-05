@@ -12,6 +12,8 @@ Node, Express project - backend
 - mongoose -> to handle mongo database
 - serve -> to serve html files
 - webpack -> to encapsulate
+- helmet -> security
+- cors -> security
 
 ## Scripts
 - build -> make teh project build

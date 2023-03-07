@@ -7,9 +7,9 @@ import { LogSuccess } from "../utils/logger";
 @Tags("GoodbyeController")
 export class GoodbyeController implements IGoodbyeController {
     /**
-     * Endpoint to retreive a Message "Hello {name}" in JSON
+     * Endpoint to retreive a Message "Goodbye {name} " in JSON
      * @param { string | undefined } name Name of user to be  greeated
-     * @returns { GoodbyeResponse } Promise of BasicResponse
+     * @returns { GoodbyeResponse } Promise of GoodbyeResponse
      */
     @Get("/")
     public async getMessage(@Query()name?: string): Promise<GoodbyeResponse> {

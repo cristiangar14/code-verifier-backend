@@ -17,6 +17,23 @@
 				],
 				"type": "object",
 				"description": "Basic JSON response for controllers"
+			},
+			"GoodbyeResponse": {
+				"properties": {
+					"Date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"Date",
+					"message"
+				],
+				"type": "object",
+				"description": "Basic JSON response for controllers"
 			}
 		},
 		"securitySchemes": {}
@@ -52,6 +69,39 @@
 				"description": "Endpoint to retreive a Message \"Hello {name}\" in JSON",
 				"tags": [
 					"HelloController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Name of user to be  greeated",
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/goodbye": {
+			"get": {
+				"operationId": "GetMessage",
+				"responses": {
+					"200": {
+						"description": "Promise of GoodbyeResponse",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GoodbyeResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to retreive a Message \"Goodbye {name} \" in JSON",
+				"tags": [
+					"GoodbyeController"
 				],
 				"security": [],
 				"parameters": [

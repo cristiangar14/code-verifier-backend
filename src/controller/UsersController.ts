@@ -22,7 +22,7 @@ export class UserController implements IUserController {
 
         if (id) {
             LogSuccess(`[/api/users?id=] Get user by ID: ${id}`)
-            response = await deleteUserById(id);
+            response = await getUserByID(id);
         } else {
             LogSuccess('[/api/users] Get all users Request')
             response = await getAllUsers();
@@ -63,7 +63,7 @@ export class UserController implements IUserController {
      */
     
     @Post("/")
-    public async createUser(user: any): Promise<any> {
+    public async createUser(@Query()user: any): Promise<any> {
         let response: any = '';
         await createUser(user).then((r) => {
             LogSuccess(`[/api/users?id=] CREATE user : ${user.name}`)

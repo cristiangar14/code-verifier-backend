@@ -8,6 +8,7 @@ import helloRouter from './HelloRouter';
 import { LogInfo } from '../utils/logger';
 import goodbyeRouter from './GoodbyeRouter';
 import usersRouter from './UserRouter';
+import authRouter from './AuthRouter';
 
 //Server instance
 let server = express();
@@ -28,6 +29,8 @@ server.use('/', rootRouter); // http://localhost:8000/api/
 server.use('/hello', helloRouter); //http://localhost:8000/api/hello -> helloRouter
 server.use('/goodbye', goodbyeRouter); //http://localhost:8000/api/goodbyeRouter -> goodbyeRouter
 server.use('/users', usersRouter); //http://localhost:8000/api/users -> usersRouter
+// Auth routes
+server.use('/auth', authRouter); //http://localhost:8000/api/auth -> authRouter
 // Add more routes to the app
 
 export default server;

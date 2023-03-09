@@ -122,7 +122,7 @@
 				"operationId": "GetUsers",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "All users or user found by id",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -137,6 +137,7 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "Id of user to retreive (optional)",
 						"in": "query",
 						"name": "id",
 						"required": false,
@@ -148,6 +149,64 @@
 			},
 			"delete": {
 				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "message informing if delteing was correct",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to delete user by id",
+				"tags": [
+					"UserController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of user to delete (optional)",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "message informing if creating was correct",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to create a new user",
+				"tags": [
+					"UserController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "data of user for creating",
+						"in": "query",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateUser",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -165,8 +224,16 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "id",
-						"required": false,
+						"required": true,
 						"schema": {
 							"type": "string"
 						}

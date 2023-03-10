@@ -1,4 +1,4 @@
-import { Delete, Get, Post, Put, Query, Route, Tags } from "tsoa";
+import { Delete, Get, Post, Put, Query, Route, Tags, Body } from "tsoa";
 import { IAuthController } from "./interfaces";
 import { LogSuccess, LogError, LogWarning } from "../utils/logger";
 import { IUser } from "../domain/interfaces/IUser.interface";
@@ -15,7 +15,7 @@ import { AuthResponse, ErrorResponse } from "./types";
 export class AuthController implements IAuthController {
 
     @Post("/register")
-    public async registerUser(user: IUser): Promise<any> {
+    public async registerUser(@Body()user: IUser): Promise<any> {
         let response: any = '';
 
         if (user) {
@@ -37,7 +37,7 @@ export class AuthController implements IAuthController {
 
 
     @Post("/login")
-    public async loginUser(@Query()auth: IAuth): Promise<any> {
+    public async loginUser(@Body()auth: IAuth): Promise<any> {
         
         let response: AuthResponse | ErrorResponse| undefined;
         

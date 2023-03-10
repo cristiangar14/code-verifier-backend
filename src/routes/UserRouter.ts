@@ -4,6 +4,7 @@ import { LogInfo } from "../utils/logger";
 
 // Body Parser to read BODY from request
 import bodyParser from "body-parser";
+import { verifyToken } from "../middlewares/verifyToken.middleware";
 let jsonParser = bodyParser.json();
 
 // Router from express
@@ -11,7 +12,7 @@ let usersRouter = express.Router();
 
 usersRouter.route('/')
     //ttp://localhost:800/api/users?id=6407ef0adc563ff477338441
-    .get(async (req:Request, res: Response) => {
+    .get(verifyToken, async (req:Request, res: Response) => {
         // Obtain a Query Param
         let id: any = req?.query?.id;
         LogInfo(`Query Param: ${id}`);
@@ -23,7 +24,7 @@ usersRouter.route('/')
         return res.status(200).send(response);
     })
     //  DELETE: 
-    .delete(async (req: Request, res: Response) => {
+    .delete(verifyToken, async (req: Request, res: Response) => {
         // Obtain a Query Param
         let id: any = req?.query?.id;
         LogInfo(`Query Param: ${id}`);
@@ -35,7 +36,7 @@ usersRouter.route('/')
         return res.status(200).send(response);
     })
     // Put
-    .put(async (req: Request, res: Response) => {
+    .put(verifyToken, async (req: Request, res: Response) => {
 
         let id: any = req?.query?.id;
         let name: any = req?.query?.name;

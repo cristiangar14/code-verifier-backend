@@ -20,3 +20,11 @@ export type GoodbyeResponse = {
     message: string,
     Date: Date,
 }
+
+/**
+ * Auth JSON response for controllers
+ */
+export type AuthResponse = {
+    message: string,
+    token: string
+}

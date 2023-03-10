@@ -4,11 +4,20 @@ import { LogSuccess, LogError } from "../../utils/logger";
 import { IUser } from "../interfaces/IUser.interface";
 import { IAuth } from "../interfaces/IAuth.interface";
 
+// Enviroment variables
+import dotenv from 'dotenv';
+
 //BCRYPT for passwords
 import bcrypt from "bcrypt";
 
 // JWT
 import jwt from "jsonwebtoken";
+
+// Configuration of enviroment variables
+dotenv.config();
+
+// Obtain secret key to generate JWT
+const secret = process.env.SECRETKEY || 'THISISMYSECRETTEXTFORJWT'
 
 //CRUD
 /**
@@ -93,32 +102,35 @@ export const loginUser =async (auth: IAuth): Promise<any | undefined> => {
     try {
         let userModel = userEntity();
 
-        // find user by id
-        userModel.findOne({email:auth.email}, (err: any, user: IUser) => {
-            if (err) {
-                // TODO return ERROR --> ERROR While searching (500)
-            }
+        let userFound: IUser | undefined = undefined;
+        let token = undefined;
 
-            if (!user) {
-                // TODO return ERROR --> ERROR USER NOT FOUND (404)
-            }
-
-            // Use Bcrypt to compare password
-            let validPassword = bcrypt.compareSync(auth.password, user.password);
-
-            if (!validPassword) {
-                // TODO: -> NOT AUTHORIZED (401)
-            }
-
-            // create jwt
-            // TODO: Secret must be in .env
-            let token = jwt.sign({email: user.email}, 'SECRETWORD', {
-                expiresIn: "2h"
-            });
-
-            return token;
-
+        // Checj is user exist by email
+        await userModel.findOne({email:auth.email}).then( (user: IUser) => {
+            userFound = user;
+        }).catch((err) => {
+            console.error('[ERROR AUTHENTICATION IN ORM]: Usr not found');
+            throw new Error(`[ERROR AUTHENTICATION IN ORM]: Usr not found: ${err}`);
+            
         })
+
+        // Check if password is valid (compare with bcrypt)
+        let validPassword = bcrypt.compareSync(auth.password, userFound!.password);
+
+        if (!validPassword) {
+            console.error('[ERROR AUTHENTICATION IN ORM]: Password not valid');
+            throw new Error(`[ERROR AUTHENTICATION IN ORM]: Password not valid`);
+        }
+
+        // Generate our JWT
+        token = jwt.sign({email: userFound!.email}, secret, {
+            expiresIn: "2h"
+        })
+
+        return {
+            user: userFound,
+            token
+        }
         
     } catch (error) {
         LogError(`[ORM ERROR]: logging User: ${error}`);

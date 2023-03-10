@@ -1,6 +1,12 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction, response } from "express";
 
+import dotenv from 'dotenv';
+
+// config enviroment vaiables
+dotenv.config();
+const secret = process.env.SECRETKEY || 'THISISMYSECRETTEXTFORJWT'
+
 /**
  * 
  * @param { Request } req Original request previous middleware of verification JWT
@@ -20,8 +26,8 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
         })
     }
 
-    // Verify th token obtain
-    jwt.verify(token, '', (err:any, decode:any) => {
+    // Verify th token obtain, we pass the secret
+    jwt.verify(token, secret, (err:any, decode:any) => {
         if (err) {
             return response.status(500).send({
                 authenticationError: 'JWT verification failed',
@@ -29,8 +35,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             })
         }
     })
-
-    // Pass something to next request (id of user || other info)
+    
     // Execute Next function -> Protected Eoutes will be execute
     next()
 

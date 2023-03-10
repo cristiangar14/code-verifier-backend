@@ -4,7 +4,7 @@ import { LogSuccess, LogWarning } from "../utils/logger";
 
 // ORM
 import { getAllUsers, getUserByID, deleteUserById, createUser, updateUserById } from "../domain/orm/User.orm";
-import { BasicResponse } from "./types";
+
 
 @Route("/api/users")
 @Tags("UserController")
@@ -23,9 +23,12 @@ export class UserController implements IUserController {
         if (id) {
             LogSuccess(`[/api/users?id=] Get user by ID: ${id}`)
             response = await getUserByID(id);
+            //REMOVE the password
+            response.password = '';
         } else {
             LogSuccess('[/api/users] Get all users Request')
             response = await getAllUsers();
+            response.map((el:any) => el.password = '');
         }
 
         return response;
@@ -53,28 +56,6 @@ export class UserController implements IUserController {
             }
         }
 
-        return response;
-    }
-
-    /**
-     * Endpoint to create a new user
-     * @param {user} user data of user for creating 
-     * @returns message informing if creating was correct
-     */
-    
-    @Post("/")
-    public async createUser(@Query()user: any): Promise<any> {
-        let response: any = '';
-        await createUser(user).then((r) => {
-            LogSuccess(`[/api/users?id=] CREATE user : ${user.name}`)
-            response = {
-                message: `User created successfully: ${user.name}`
-            }
-        }).catch((error) => {
-            response = {
-                message: `Error creating User: ${user.name}`
-            }
-        })
         return response;
     }
 

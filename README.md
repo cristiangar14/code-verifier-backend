@@ -14,8 +14,9 @@ Node, Express project - backend
 - webpack -> to encapsulate
 - helmet -> security
 - cors -> security
-- JWT -> Security with token for access
+- jsonwebtoken -> Security with token for access
 - bcrypt -> for cypher passwords
+- body-parser -> read body request
 
 ## Scripts
 - build -> make teh project build

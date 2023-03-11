@@ -35,6 +35,59 @@
 				"type": "object",
 				"description": "Basic JSON response for controllers"
 			},
+			"KataLevel": {
+				"enum": [
+					"Basic",
+					"Medium",
+					"High"
+				],
+				"type": "string"
+			},
+			"IKata": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"level": {
+						"$ref": "#/components/schemas/KataLevel"
+					},
+					"intents": {
+						"type": "number",
+						"format": "double"
+					},
+					"stars": {
+						"type": "number",
+						"format": "double"
+					},
+					"creator": {
+						"type": "string"
+					},
+					"solution": {
+						"type": "string"
+					},
+					"participant": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"description",
+					"level",
+					"intents",
+					"stars",
+					"creator",
+					"solution",
+					"participant"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IUser": {
 				"properties": {
 					"name": {
@@ -49,13 +102,20 @@
 					"age": {
 						"type": "number",
 						"format": "double"
+					},
+					"katas": {
+						"items": {
+							"$ref": "#/components/schemas/IKata"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
 					"name",
 					"email",
 					"password",
-					"age"
+					"age",
+					"katas"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -271,6 +331,53 @@
 				]
 			}
 		},
+		"/api/users/katas": {
+			"get": {
+				"operationId": "GetKatas",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"UserController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/auth/register": {
 			"post": {
 				"operationId": "RegisterUser",
@@ -380,6 +487,151 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/api/katas": {
+			"get": {
+				"operationId": "GetKatas",
+				"responses": {
+					"200": {
+						"description": "All katas or kata found by id",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to retrive the katas in the collection \"Katas\" of DB",
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Id of kata to retreive (optional)",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteKata",
+				"responses": {
+					"200": {
+						"description": "message informing if delteing was correct",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to delete Kata by id",
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of kata to delete (optional)",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateKata",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to update kata by id",
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IKata"
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "CreateKata",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to create new kata",
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IKata"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

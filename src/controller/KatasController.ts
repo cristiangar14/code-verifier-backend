@@ -1,5 +1,5 @@
 import { IKataController } from "./interfaces";
-import { Delete, Get, Post, Put, Query, Route, Tags } from "tsoa";
+import { Body, Delete, Get, Post, Put, Query, Route, Tags } from "tsoa";
 import { LogSuccess, LogWarning } from "../utils/logger";
 
 // ORM
@@ -61,11 +61,11 @@ export class KatasController implements IKataController {
 
    /**
      * Endpoint to update kata by id
-     * @param {kata} user 
+     * @param {kata} kata 
      * @param {string} id 
      */
    @Put("/")
-   public async updateKata(@Query()kata: IKata, @Query()id: string): Promise<any> {
+   public async updateKata(@Body()kata: IKata, @Query()id: string): Promise<any> {
        let response: any = '';
        if (id) {
            LogSuccess(`[/api/katas?id=] UPDATE kata by ID: ${id}`)
@@ -89,7 +89,7 @@ export class KatasController implements IKataController {
     * @param { IKata } kata 
     */
     @Post('/')
-    public async createKata(kata: IKata): Promise<any> {
+    public async createKata(@Body()kata: IKata): Promise<any> {
         let response: any = '';
 
         if (kata) {

@@ -1,4 +1,5 @@
 import { userEntity } from "../entities/User.entity";
+import { kataEntity } from "../entities/Kata.entity";
 
 import { LogSuccess, LogError } from "../../utils/logger";
 import { IUser } from "../interfaces/IUser.interface";
@@ -13,6 +14,8 @@ import bcrypt from "bcrypt";
 // JWT
 import jwt from "jsonwebtoken";
 import { UsersResponse } from "../types/UsersResponse.type";
+import { IKata } from "../interfaces/Ikata.interface";
+import mongoose from "mongoose";
 
 // Configuration of enviroment variables
 dotenv.config();
@@ -33,7 +36,7 @@ export const getAllUsers = async (page:number, limit: number): Promise<any[] | u
         //Search all users (using pagination)
         console.log(page, limit)
         await userModel.find()
-            .select('name email age')
+            .select('name email age katas')
             .limit(limit)
             .skip((page - 1) * limit)
             .exec().then((users: IUser[]) => {
@@ -61,7 +64,7 @@ export const getUserByID =async (id:string) : Promise<any | undefined> => {
         let userModel = userEntity();
 
         //Search user by ID
-        return await userModel.findById(id).select("name email age");
+        return await userModel.findById(id).select("name email age katas");
 
     } catch (error) {
         LogError(`[ORM ERROR]: Getting User by id: ${error}`);
@@ -149,3 +152,39 @@ export const logoutUser =async (): Promise<any | undefined> => {
     // TODO: Not implemented
 }
 
+
+
+export const getAllKatasFromUser = async (page:number, limit: number, id:string): Promise<any[] | undefined> => {
+    try {
+        let userModel = userEntity();
+        let katasModel = kataEntity();
+        let katasFound: IKata[] = [];
+        let response: any = {
+            katas: []
+        };
+        
+        await userModel.findById(id).then(async (user: IUser) => {
+            response.user = user.email;
+            // Create types to search
+            let objectIds: mongoose.Types.ObjectId[] = [];
+            user.katas.forEach(( kataId: string ) => {
+                let objectId = new mongoose.Types.ObjectId(kataId)
+                objectIds.push(objectId)
+            })
+            
+            await katasModel.find({"_id": {"$in":objectIds}}).then((katas: IKata[]) => {
+                katasFound = katas;
+            })
+
+        }).catch((err) => {
+            LogError(`[ORM ERROR]: Obtainig User: ${err}`);
+        })
+
+        response.katas = katasFound;
+        
+        return response;
+
+    } catch (error) {
+        LogError(`[ORM ERROR]: Getting all Users: ${error}`);
+    }
+}

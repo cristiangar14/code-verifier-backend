@@ -3,13 +3,13 @@ import { IUserController } from "./interfaces";
 import { LogSuccess, LogWarning } from "../utils/logger";
 
 // ORM
-import { getAllUsers, getUserByID, deleteUserById, updateUserById } from "../domain/orm/User.orm";
+import { getAllUsers, getUserByID, deleteUserById, updateUserById, getAllKatasFromUser } from "../domain/orm/User.orm";
 
 
 @Route("/api/users")
 @Tags("UserController")
 export class UserController implements IUserController {
-    
+     
     
     /**
      * Endpoint to retrive the users in the collection "Users" of DB
@@ -75,6 +75,24 @@ export class UserController implements IUserController {
             LogWarning('[/api/users] Update user Request WITHOUT ID')
             response = {
                 message: `Please, provide an Id to Uptade in the database`
+            }
+        }
+
+        return response;
+    }
+
+
+    @Get('/katas') // users/katas
+    public async getKatas(@Query()page: number, @Query()limit:number,@Query()id: string): Promise<any> {
+        let response: any = '';
+        
+        if (id) {
+            LogSuccess('[/api/users/katas] Get katas from user by id');
+            response = await getAllKatasFromUser(page, limit, id);
+        } else {
+            LogSuccess('[/api/users/katas] Get all katas without id')
+            response = {
+                message: 'ID from user is needed'
             }
         }
 

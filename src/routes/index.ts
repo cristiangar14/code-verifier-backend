@@ -9,6 +9,7 @@ import { LogInfo } from '../utils/logger';
 import goodbyeRouter from './GoodbyeRouter';
 import usersRouter from './UserRouter';
 import authRouter from './AuthRouter';
+import katasRouter from './KataRouter';
 
 //Server instance
 let server = express();
@@ -31,6 +32,9 @@ server.use('/goodbye', goodbyeRouter); //http://localhost:8000/api/goodbyeRouter
 server.use('/users', usersRouter); //http://localhost:8000/api/users -> usersRouter
 // Auth routes
 server.use('/auth', authRouter); //http://localhost:8000/api/auth -> authRouter
+// Katas routes
+server.use('/katas', katasRouter); //http://localhost:8000/api/auth -> authRouter
+
 // Add more routes to the app
 
 export default server;

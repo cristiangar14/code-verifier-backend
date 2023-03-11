@@ -1,3 +1,4 @@
+import { IKata } from "../../domain/interfaces/Ikata.interface";
 import { IUser } from "../../domain/interfaces/IUser.interface";
 import { BasicResponse, GoodbyeResponse } from "../types";
 
@@ -23,4 +24,15 @@ export interface IAuthController {
     registerUser(user: IUser): Promise<any>
     // Login user
     loginUser(auth:any): Promise<any>
+}
+
+export interface IKataController {
+    //Create new kata
+    createKata(kata: IKata): Promise<any>
+    //Read all katas from database || get kata by id
+    getKatas(page: number, limit:number, id?: string): Promise<any>
+    // Update kata
+    updateKata(kata: IKata, id:string): Promise<any>
+    // Delete kata by id
+    deleteKata(id?: string): Promise<any>
 }

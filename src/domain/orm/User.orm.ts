@@ -12,6 +12,7 @@ import bcrypt from "bcrypt";
 
 // JWT
 import jwt from "jsonwebtoken";
+import { UsersResponse } from "../types/UsersResponse.type";
 
 // Configuration of enviroment variables
 dotenv.config();
@@ -23,13 +24,31 @@ const secret = process.env.SECRETKEY || 'THISISMYSECRETTEXTFORJWT'
 /**
  * Method to obtain all user from collections "Users" is mongo Server
  */
-export const getAllUsers = async (): Promise<any[] | undefined> => {
+export const getAllUsers = async (page:number, limit: number): Promise<any[] | undefined> => {
     try {
         let userModel = userEntity();
 
-        //Search all users
+        let response: any = {};
+        
+        //Search all users (using pagination)
+        console.log(page, limit)
+        await userModel.find()
+            .select('name email age')
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .exec().then((users: IUser[]) => {
+                response.users = users;
+            })
+        
+        // count total documents in collection "Users"
+        await userModel.countDocuments().then((total: number) => {
+            response!.totalPages = Math.ceil(total/limit);
+            response!.currentPage = page;
+
+        })
+
         LogSuccess("[ORM SUCCESS]: Getting all Users")
-        return await userModel.find();
+        return response;
 
     } catch (error) {
         LogError(`[ORM ERROR]: Getting all Users: ${error}`);
@@ -42,7 +61,7 @@ export const getUserByID =async (id:string) : Promise<any | undefined> => {
         let userModel = userEntity();
 
         //Search user by ID
-        return await userModel.findById(id);
+        return await userModel.findById(id).select("name email age");
 
     } catch (error) {
         LogError(`[ORM ERROR]: Getting User by id: ${error}`);

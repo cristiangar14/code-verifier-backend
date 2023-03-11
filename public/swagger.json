@@ -34,6 +34,47 @@
 				],
 				"type": "object",
 				"description": "Basic JSON response for controllers"
+			},
+			"IUser": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"age": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"email",
+					"password",
+					"age"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IAuth": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -137,6 +178,24 @@
 				"security": [],
 				"parameters": [
 					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
 						"description": "Id of user to retreive (optional)",
 						"in": "query",
 						"name": "id",
@@ -170,35 +229,6 @@
 						"in": "query",
 						"name": "id",
 						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "CreateUser",
-				"responses": {
-					"200": {
-						"description": "message informing if creating was correct",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"description": "Endpoint to create a new user",
-				"tags": [
-					"UserController"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "data of user for creating",
-						"in": "query",
-						"name": "user",
-						"required": true,
 						"schema": {
 							"type": "string"
 						}
@@ -239,6 +269,117 @@
 						}
 					}
 				]
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"operationId": "RegisterUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IUser"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"operationId": "LoginUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IAuth"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/me": {
+			"get": {
+				"operationId": "UserData",
+				"responses": {
+					"200": {
+						"description": "All users or user found by id",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to retrive the users in the collection \"Users\" of DB\nMiddleware: Validate JWT\nIn header you must add the x-access-token with a valid token",
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of user to retreive (optional)",
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/auth/logout": {
+			"post": {
+				"operationId": "LogoutUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": []
 			}
 		}
 	},
